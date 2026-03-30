@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PAILIN GROUP - LUXURY EDITION</title>
+    
+    <link rel="icon" type="image/png" href="logo.png">
+
+    <script src="https://cdn.jsdelivr.net/npm/jsqr/dist/jsQR.js"></script>
+    <style>
+        :root {
+            --primary: #1db954;
+            --primary-glow: rgba(29, 185, 84, 0.4);
+            --bg: #080808;
+            --glass: rgba(25, 25, 25, 0.7);
+            --glass-border: rgba(255, 255, 255, 0.05);
+            --text: #ffffff;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background: var(--bg);
+            background-image: radial-gradient(circle at 50% -20%, #1a3a25, #080808);
+            color: var(--text);
+            display: flex;
+            justify-content: center;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 600px;
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        /* 🟢 2. สไตล์โลโก้ (Brand Logo) */
+        .brand-logo {
+            text-align: center;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+        .brand-logo img {
+            width: 120px; /* ปรับขนาดความกว้างตรงนี้ */
+            height: auto;
+            filter: drop-shadow(0 0 15px var(--primary-glow));
+            border-radius: 50%; /* ทำให้รูปเป็นวงกลมถ้าเป็นรูปจตุรัส */
+            transition: 0.3s;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 25px;
+            background: rgba(255,255,255,0.03);
+            padding: 5px;
+            border-radius: 16px;
+            border: 1px solid var(--glass-border);
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 12px;
+            background: transparent;
+            border: none;
+            color: #888;
+            cursor: pointer;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .tab-btn.active {
+            background: var(--primary);
+            color: #000;
+            box-shadow: 0 4px 15px var(--primary-glow);
+        }
+
+        .main-panel {
+            background: var(--glass);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 30px;
+            padding: 30px;
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.5);
+        }
+
+        .content-section { display: none; }
+        .content-section.active { 
+            display: block; 
+            animation: slideUp 0.4s ease-out;
+        }
+
+        h2 {
+            text-align: center;
+            color: var(--primary);
+            font-size: 20px;
+            margin-bottom: 25px;
+            letter-spacing: 2px;
+            font-weight: 800;
+            text-shadow: 0 0 10px var(--primary-glow);
+        }
+
+        textarea {
+            width: 100%;
+            height: 220px;
+            padding: 18px;
+            border-radius: 18px;
+            border: 1px solid rgba(255,255,255,0.1);
+            background: rgba(0,0,0,0.3);
+            color: #fff;
+            box-sizing: border-box;
+            outline: none;
+            font-size: 14px;
+            margin-bottom: 20px;
+            transition: border 0.3s;
+        }
+
+        textarea:focus { border-color: var(--primary); }
+
+        .btn-calc {
+            width: 100%;
+            padding: 18px;
+            border: none;
+            border-radius: 15px;
+            background: var(--primary);
+            color: #000;
+            font-size: 16px;
+            font-weight: 800;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn-calc:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px var(--primary-glow);
+        }
+
+        .result-box {
+            background: #ffffff;
+            color: #121212;
+            border-radius: 20px;
+            padding: 25px;
+            margin-top: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .result-box::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 5px;
+            background: var(--primary);
+        }
+
+        .res-text {
+            white-space: pre-wrap;
+            font-weight: 700;
+            font-size: 16px;
+            margin: 0;
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            line-height: 1.6;
+        }
+
+        .btn-copy {
+            width: 100%;
+            padding: 14px;
+            background: #121212;
+            color: #fff;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            margin-top: 20px;
+            font-weight: bold;
+            transition: background 0.2s;
+        }
+
+        .btn-copy:hover { background: #333; }
+
+        .qr-area {
+            border: 2px dashed rgba(255,255,255,0.1);
+            padding: 40px 20px;
+            border-radius: 20px;
+            text-align: center;
+            color: #666;
+            margin-bottom: 20px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .qr-area:hover {
+            background: rgba(255,255,255,0.02);
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        #toast {
+            position: fixed;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--primary);
+            color: #000;
+            padding: 12px 35px;
+            border-radius: 50px;
+            font-weight: 800;
+            display: none;
+            z-index: 1000;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes slideUp { 
+            from { opacity: 0; transform: translateY(20px); } 
+            to { opacity: 1; transform: translateY(0); } 
+        }
+
+        canvas { display: none; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="brand-logo">
+        <img src="logo.png" alt="Logo" onerror="this.src='https://ui-avatars.com/api/?name=PAILIN+GROUP&background=1db954&color=fff&size=128'">
+    </div>
+
+    <div class="tabs">
+        <button class="tab-btn active" onclick="switchTab(0)">💰 รวมแอดห้อง5</button>
+        <button class="tab-btn" onclick="switchTab(1)">⏳ รวมยอดบริษัท</button>
+        <button class="tab-btn" onclick="switchTab(2)">🔍 เช็คเลข QR</button>
+    </div>
+
+    <div class="main-panel">
+        <div id="sec0" class="content-section active">
+            <h2>📢 รวม ADD ROOM5(เท่านั้น) </h2>
+            <textarea id="inAdd" placeholder="วางข้อความพนักงานที่นี่..."></textarea>
+            <button class="btn-calc" onclick="calculateAdd()">🚀 กดรวมผลลัพธ์ได้เลย</button>
+            <div id="resAdd" style="display:none;">
+                <div class="result-box">
+                    <p id="outAdd" class="res-text"></p>
+                    <button class="btn-copy" onclick="copyText('outAdd')">📋 คัดลอกไปส่งเลย </button>
+                </div>
+            </div>
+        </div>
+
+        <div id="sec1" class="content-section">
+            <h2>💰 PAILIN GROUP </h2>
+            <textarea id="inMoney" placeholder="วางข้อความ Telegram เพื่อรวมยอด..."></textarea>
+            <button class="btn-calc" onclick="calculateMoney()">➕ กดรวมยอดตรงนี้เลย</button>
+            <div id="resMoney" style="display:none;">
+                <div class="result-box">
+                    <p id="outMoney" class="res-text"></p>
+                    <button class="btn-copy" onclick="copyText('outMoney')">📋 คัดลอกยอดทั้งหมด </button>
+                </div>
+            </div>
+        </div>
+
+        <div id="sec2" class="content-section">
+            <h2>🔍 Check the QR code </h2>
+            <div class="qr-area" onclick="document.body.focus()">
+                <div style="font-size: 40px; margin-bottom: 10px;">📸</div>
+                กดที่นี่แล้ว <b>Ctrl + V</b> เพื่อวางรูป QR
+            </div>
+            <div class="result-box" style="text-align:center;">
+                <div id="outQR" style="font-size:38px; color:#e74c3c; font-weight:900; margin:15px 0; letter-spacing:3px;">-</div>
+                <button class="btn-calc" onclick="copyQR()">📋 คัดลอกเลขบัญชี</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="toast">SUCCESSFULLY COPIED!</div>
+<canvas id="canvas"></canvas>
+
+<script>
+    let lastQR = "";
+
+    function switchTab(idx) {
+        document.querySelectorAll('.tab-btn').forEach((b, i) => b.classList.toggle('active', i === idx));
+        document.querySelectorAll('.content-section').forEach((s, i) => s.classList.toggle('active', i === idx));
+    }
+
+    function calculateAdd() {
+        const input = document.getElementById('inAdd').value;
+        const lines = input.split('\n');
+        let d = { add:0, leave:0, block:0, dup:0, remain:0, post:0, nopost:0, off:0, bill:0, cut:0, last:0 };
+        let cuts = {};
+
+        let suffix = "(เสริม)"; 
+        if (input.includes("หนังสือ")) suffix = "(Books)";
+        else if (input.includes("PM")) suffix = "(เสริม)";
+
+        const getN = (s) => { 
+            let m = s.replace(/,/g, '').match(/(\d+)/); 
+            return m ? parseInt(m[1]) : 0; 
+        };
+
+        lines.forEach(line => {
+            let l = line.trim().replace(/：/g, ':');
+            if (l.includes('แอดเข้า')) d.add += getN(l);
+            if (l.includes('ออกกลุ่ม')) d.leave += getN(l);
+            if (l.includes('บล็อค')) d.block += getN(l);
+            if (l.includes('ซ้ำ')) d.dup += getN(l);
+            if (l.includes('เหลือ')) d.remain += getN(l);
+            if (l.includes('กำลังโพสขาย')) d.post += getN(l);
+            if (l.includes('เข้ามาไม่โพส')) d.nopost += getN(l);
+            if (l.includes('เข้าออฟ')) d.off += getN(l);
+            if (l.includes('เปิดบิล')) d.bill += getN(l);
+
+            if (l.includes('เชือด') || l.includes('บิลเชือด')) {
+                let ms = l.match(/(\d+)\s*\/\s*(\d+)/g);
+                if (ms) {
+                    ms.forEach(m => {
+                        let p = m.split('/');
+                        let c = parseInt(p[0].trim()), v = parseInt(p[1].trim());
+                        if (v < 100) { let t = c; c = v; v = t; } 
+                        d.cut += c;
+                        cuts[v] = (cuts[v] || 0) + c;
+                    });
+                } else { d.cut += getN(l); }
+            }
+            if (l.includes('งานสุดท้าย')) {
+                let ms = l.match(/(\d+)\s*\/\s*(\d+)/g);
+                if (ms) { ms.forEach(m => d.last += parseInt(m.split('/')[0].trim())); }
+                else { d.last += getN(l); }
+            }
+        });
+
+        const now = new Date();
+        const timeStr = now.getHours().toString().padStart(2, '0') + "." + now.getMinutes().toString().padStart(2, '0');
+
+        let res = `แจ้งแอดรอบ ${timeStr} ${suffix}\n\nห้อง 5\n\n📢แอดเข้า : ${d.add}\n📢ออกกลุ่ม : ${d.leave}\n📢บล็อค : ${d.block}\n📢ซ้ำ : ${d.dup}\n📢เหลือ : ${d.remain}\n📢กำลังโพสขาย : ${d.post}\n📢เข้ามาไม่โพส : ${d.nopost}\n📢เข้าออฟ : ${d.off}\n\n💵เปิดบิล : ${d.bill}\n💵บิลเชือด : ${d.cut}\n💵งานสุดท้าย : ${d.last}\n\n`;
+        Object.keys(cuts).sort().forEach(p => res += `${p}/${cuts[p]}\n`);
+
+        document.getElementById('outAdd').innerText = res;
+        document.getElementById('resAdd').style.display = 'block';
+    }
+
+    function calculateMoney() {
+        const text = document.getElementById("inMoney").value.replace(/,/g, '');
+        let inP = 0, inM = 0, outM = 0;
+        text.split('\n').forEach(l => {
+            if (l.includes("总入款金额")) {
+                let p = l.match(/(\d+)\s*人/); if(p) inP += parseInt(p[1]);
+                let v = parseFloat(l.split(/[:：]/).pop()); if(!isNaN(v)) inM += v;
+            } else if (l.includes("出款") && !l.includes("-")) {
+                let v = parseFloat(l.split(/[:：]/).pop()); if(!isNaN(v)) outM += v;
+            }
+        });
+        const f = (n) => n.toLocaleString('en-US');
+        document.getElementById('outMoney').innerText = `🧧 凤凰集团 拜林最牛逼 🧧\n\n💰总入款金额  ${f(inP)} คน  : ${f(inM)}\n\n💸出款   :  ${f(outM)}`;
+        document.getElementById('resMoney').style.display = 'block';
+    }
+
+    window.addEventListener('paste', e => {
+        const item = e.clipboardData.items[0];
+        if (item && item.type.includes('image')) {
+            const reader = new FileReader();
+            reader.onload = ev => {
+                const img = new Image();
+                img.src = ev.target.result;
+                img.onload = () => {
+                    const cvs = document.getElementById('canvas'), ctx = cvs.getContext('2d');
+                    cvs.width = img.width; cvs.height = img.height;
+                    ctx.drawImage(img,0,0);
+                    const code = jsQR(ctx.getImageData(0,0,cvs.width,cvs.height).data, cvs.width, cvs.height);
+                    if(code) {
+                        lastQR = code.data.length >= 55 ? code.data.substring(40,55) : code.data;
+                        document.getElementById('outQR').textContent = lastQR;
+                    }
+                };
+            };
+            reader.readAsDataURL(item.getAsFile());
+        }
+    });
+
+    function copyText(id) { navigator.clipboard.writeText(document.getElementById(id).innerText); showToast(); }
+    function copyQR() { if(lastQR) { navigator.clipboard.writeText(lastQR); showToast(); } }
+    function showToast() { const t = document.getElementById('toast'); t.style.display='block'; setTimeout(()=>t.style.display='none', 2000); }
+</script>
+</body>
+</html>
