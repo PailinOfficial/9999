@@ -6,6 +6,7 @@
     <title>PAILIN GROUP - LUXURY EDITION</title>
     
     <link rel="icon" type="image/png" href="logo.png">
+    <link rel="shortcut icon" type="image/png" href="logo.png">
 
     <script src="https://cdn.jsdelivr.net/npm/jsqr/dist/jsQR.js"></script>
     <style>
@@ -36,21 +37,21 @@
             animation: fadeIn 0.8s ease-out;
         }
 
-        /* 🟢 2. สไตล์โลโก้ (Brand Logo) */
+        /* 🟢 แก้ไขส่วนโลโก้จากรูปภาพเป็นวิดีโอ */
         .brand-logo {
             text-align: center;
-            margin-bottom: 20px;
+            margin-bottom: 25px;
             display: flex;
             justify-content: center;
-            align-items: center;
-            flex-direction: column;
         }
-        .brand-logo img {
-            width: 120px; /* ปรับขนาดความกว้างตรงนี้ */
-            height: auto;
-            filter: drop-shadow(0 0 15px var(--primary-glow));
-            border-radius: 50%; /* ทำให้รูปเป็นวงกลมถ้าเป็นรูปจตุรัส */
-            transition: 0.3s;
+        
+        .brand-logo video {
+            width: 120px; /* ปรับขนาดความกว้างวิดีโอ */
+            height: 120px; /* ปรับขนาดความสูงให้เป็นสี่เหลี่ยม */
+            object-fit: cover; /* ให้วิดีโอเต็มพื้นที่สี่เหลี่ยม */
+            border-radius: 20px; /* ปรับความมนของมุมสี่เหลี่ยม */
+            box-shadow: 0 0 20px var(--primary-glow);
+            border: 2px solid var(--primary);
         }
 
         .tabs {
@@ -123,7 +124,9 @@
             transition: border 0.3s;
         }
 
-        textarea:focus { border-color: var(--primary); }
+        textarea:focus {
+            border-color: var(--primary);
+        }
 
         .btn-calc {
             width: 100%;
@@ -232,12 +235,15 @@
 
 <div class="container">
     <div class="brand-logo">
-        <img src="logo.png" alt="Logo" onerror="this.src='https://ui-avatars.com/api/?name=PAILIN+GROUP&background=1db954&color=fff&size=128'">
+        <video autoplay muted loop playsinline>
+            <source src="money.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
     </div>
 
     <div class="tabs">
-        <button class="tab-btn active" onclick="switchTab(0)">💰 รวมแอดห้อง5</button>
-        <button class="tab-btn" onclick="switchTab(1)">⏳ รวมยอดบริษัท</button>
+        <button class="tab-btn active" onclick="switchTab(0)">💰 รวมแอดห้อง5(เท่านั้น)</button>
+        <button class="tab-btn" onclick="switchTab(1)">⏳ รวมยอดทั้งหมดในบริษัท</button>
         <button class="tab-btn" onclick="switchTab(2)">🔍 เช็คเลข QR</button>
     </div>
 
@@ -249,7 +255,7 @@
             <div id="resAdd" style="display:none;">
                 <div class="result-box">
                     <p id="outAdd" class="res-text"></p>
-                    <button class="btn-copy" onclick="copyText('outAdd')">📋 คัดลอกไปส่งเลย </button>
+                    <button class="btn-copy" onclick="copyText('outAdd')">📋 คัดลอกไปส่งเลยตรงหมดละ </button>
                 </div>
             </div>
         </div>
@@ -261,7 +267,7 @@
             <div id="resMoney" style="display:none;">
                 <div class="result-box">
                     <p id="outMoney" class="res-text"></p>
-                    <button class="btn-copy" onclick="copyText('outMoney')">📋 คัดลอกยอดทั้งหมด </button>
+                    <button class="btn-copy" onclick="copyText('outMoney')">📋 คัดลอกยอดทั้งหมดของบริษัท </button>
                 </div>
             </div>
         </div>
